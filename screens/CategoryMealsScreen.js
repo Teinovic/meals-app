@@ -1,23 +1,27 @@
-import React from 'react'
-import { View, Text, StyleSheet, Button } from 'react-native'
+import React from 'react';
 
-const CategoryMealsScreen = props => {
-    return (
-        <View style={styles.screen}>
-            <Text>The category meals screen!</Text>
-            <Button title='Go to meal details!' onPress={() => {
-                props.navigation.navigate({routeName: 'MealDetail'})
-            }}/>
-        </View>
-    )
-}
+import { CATEGORIES, MEALS } from '../data/dummy-data';
+import MealList from '../components/MealList';
 
-const styles = StyleSheet.create({
-    screen: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
-})
+const CategoryMealScreen = props => {
+  
+  const catId = props.navigation.getParam('categoryId');
 
-export default CategoryMealsScreen
+  const displayedMeals = MEALS.filter(
+    meal => meal.categoryIds.indexOf(catId) >= 0
+  );
+
+  return <MealList listData={displayedMeals} navigation={props.navigation} />;
+};
+
+CategoryMealScreen.navigationOptions = navigationData => {
+  const catId = navigationData.navigation.getParam('categoryId');
+
+  const selectedCategory = CATEGORIES.find(cat => cat.id === catId);
+
+  return {
+    headerTitle: selectedCategory.title
+  };
+};
+
+export default CategoryMealScreen;
